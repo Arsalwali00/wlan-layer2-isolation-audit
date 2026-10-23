@@ -1,5 +1,6 @@
 # WLAN Layer-2 Station Isolation Deficits & Asymmetric Evasion Thresholds
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23602802.svg)](https://doi.org/10.5281/zenodo.23602802)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![MITRE ATT&CK](https://img.shields.io/badge/MITRE%20ATT%26CK-T1557.002-red.svg)](https://attack.mitre.org/techniques/T1557/002/)
@@ -205,6 +206,8 @@ If you reference this research, diagnostic toolchain, or empirical evasion measu
   year         = {2026},
   month        = {October},
   howpublished = {\url{https://github.com/Arsalwali00/wlan-layer2-isolation-audit}},
+  doi          = {10.5281/zenodo.23602802},
+  url          = {https://doi.org/10.5281/zenodo.23602802},
   note         = {Applied Cybersecurity Research Case Study}
 }
 ```

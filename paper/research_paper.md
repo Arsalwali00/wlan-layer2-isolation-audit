@@ -4,6 +4,7 @@
 **Affiliation:** Independent Network Security & Vulnerability Assessment Research  
 **Date:** October 2026  
 **Classification:** Applied Cybersecurity Research / Empirical Case Study  
+**Permanent DOI:** [10.5281/zenodo.23602802](https://doi.org/10.5281/zenodo.23602802)  
 **Keywords:** Address Resolution Protocol (ARP), IEEE 802.11, Station Isolation, Adversary-in-the-Middle (AitM), MITRE ATT&CK T1557.002, Intrusion Detection Systems (IDS), Evasion Thresholds, Zero Trust Architecture.
 
 ---
@@ -257,7 +258,7 @@ Future work will investigate automated mitigation via Software-Defined Networkin
 In accordance with academic reproducibility standards (Contribution #3), the complete diagnostic software suite, test orchestration scripts, and raw telemetry data developed for this research are publicly available:
 
 * **Official Repository:** [https://github.com/Arsalwali00/wlan-layer2-isolation-audit](https://github.com/Arsalwali00/wlan-layer2-isolation-audit)
-* **Permanent Research Archive:** Zenodo digital repository deposit (deposit identifier assigned upon final release tag).
+* **Permanent Research Archive:** Zenodo DOI [10.5281/zenodo.23602802](https://doi.org/10.5281/zenodo.23602802) (Archival Release `v1.0.1`).
 * **Software Toolchain Requirements:** Python 3.9+, Scapy 2.5.0+, Flask 3.0+, Suricata 7.0.2, Zeek 6.0.4.
 
 The core algorithms and operational routines are detailed in [Appendix A](#appendix-a-core-diagnostic-implementation-algorithms).
