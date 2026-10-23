@@ -18,7 +18,7 @@
 Wireless Local Area Networks (WLANs) deployed in small-to-medium enterprise (SME) and Customer Premises Equipment (CPE) environments frequently operate under an unsegmented "flat" network architecture. While transport-layer encryption (TLS 1.3) has become standard, the data link layer (Layer 2) remains fundamentally dependent on the stateless, unauthenticated Address Resolution Protocol (RFC 826).
 
 This repository contains the complete diagnostic software suite, experimental telemetry, and reproduction artifacts for the empirical research paper:  
-📄 **[*An Empirical Study on Layer-2 Station Isolation Deficits and Asymmetric Evasion Thresholds in Wireless Broadcast Domains*](paper/research_paper.md)**.
+📄 **[*An Empirical Study on Layer-2 Station Isolation Deficits and Asymmetric Evasion Thresholds in Wireless Broadcast Domains*](https://doi.org/10.5281/zenodo.23602802)**.
 
 ### Core Research Questions
 1. **RQ1:** *To what degree do commodity WLAN deployments enforce or default to Layer-2 Station Isolation in practice, and how does this affect lateral endpoint attack surfaces?*
@@ -89,11 +89,6 @@ wlan-layer2-isolation-audit/
 ├── LICENSE                        # MIT License
 ├── requirements.txt               # Python package dependencies
 ├── .gitignore                     # Git exclusion rules
-├── paper/
-│   ├── research_paper.md          # Complete empirical research paper (Markdown)
-│   ├── research_paper.tex         # Academic IEEE double-column LaTeX manuscript
-│   ├── generate_figures.py        # Publication vector figure rendering script
-│   └── figures/                   # High-resolution vector figures (PDF & PNG)
 ├── src/
 │   ├── check_client_isolation.py  # Layer-2 isolation auditor (dynamic subnet sweep)
 │   ├── fingerprint_devices.py     # Asset profiler & randomized MAC detector
