@@ -165,6 +165,9 @@ Frequency   Retention Rate       Rate NIDS (Suricata)          State NIDS (Zeek 
  0.2 Hz     [ 68.1% ± 4.2%]      [SILENT - Cache Flushes]      [ALERT: Conflict on Frame 1]
 ```
 
+![Figure 1: Empirical Asymmetric Evasion Boundary Curve](figures/fig1_evasion_retention_tradeoff.png)  
+*Figure 1: Empirical Asymmetric Evasion Boundary Curve ($N = 3$ Runs, 2,400 Checkpoints). Injection at $0.5\text{ Hz}$ sustains $99.4\% \pm 0.6\%$ cache retention while remaining completely beneath Suricata's rate-anomaly threshold.*
+
 #### Detailed Analysis: The Evasion Boundary & State vs. Rate Detection Paradigms:
 1. **The Rate-Based Evasion Window ($H_1$ Validation):** In Trials T-1, T-2, and T-3, frame injection rates met or exceeded $1.0\text{ Hz}$, rapidly tripping Suricata's 5-packet/5-second sliding window threshold (`sid:1000001`). Specifically, at $1.0\text{ Hz}$ (T-3), the sliding filter threshold of 5 frames was reached at $t = 4.8\text{s}$. In Trial T-5, injection frequency ($0.2\text{ Hz}$) was too sparse: the target operating system's natural ARP cache timeout (which exhibits stochastic jitter between 20 and 45 seconds under active traffic) caused periodic re-resolution queries that temporarily restored genuine router entries, dropping retention to $68.1\% \pm 4.2\%$. However, in **Trial T-4 ($f = 0.5\text{ Hz}$, interval $\Delta t = 2.0\text{s}$)**, the injection rate perfectly counterbalanced the target OS cache lifetime while transmitting only 2.5 packets per 5-second window—comfortably below the 5-packet NIDS threshold filter. **This validates Hypothesis $H_1$ and rejects the Null Hypothesis $H_0$ with respect to rate-thresholded detection.**
 2. **Resolving the Zeek Detection Discrepancy (State vs. Rate Models):** A key empirical and theoretical finding is the stark operational divergence between rate-based and state-based detection architectures:
@@ -197,6 +200,9 @@ To protect environmental privacy, captured public destination IP addresses were 
 | `203.0.113.206` | 11 | Regional ISP / Cloud (AS55836) | Regional messaging & infrastructure |
 | `198.51.100.84` | 8 | Google Services (AS15169) | Mobile background sync / push notifications |
 | `198.51.100.170` | 9 | Google Services (AS15169) | App ecosystem updates & telemetry |
+
+![Figure 2: Protocol Composition & AS Profiling](figures/fig2_protocol_as_distribution.png)  
+*Figure 2: (a) Diverted Flow Protocol Breakdown across 1,200 captured packets, and (b) Destination profiling mapped to Autonomous Systems (AS).*
 
 Even in the presence of ubiquitous TLS 1.3 encryption, unencrypted Layer-2 flow metadata allows an observer to construct an accurate profile of active applications, cloud dependencies, and browsing behavior.
 

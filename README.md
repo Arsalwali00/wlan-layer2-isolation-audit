@@ -90,7 +90,10 @@ wlan-layer2-isolation-audit/
 ├── requirements.txt               # Python package dependencies
 ├── .gitignore                     # Git exclusion rules
 ├── paper/
-│   └── research_paper.md          # Complete empirical research paper
+│   ├── research_paper.md          # Complete empirical research paper (Markdown)
+│   ├── research_paper.tex         # Academic IEEE double-column LaTeX manuscript
+│   ├── generate_figures.py        # Publication vector figure rendering script
+│   └── figures/                   # High-resolution vector figures (PDF & PNG)
 ├── src/
 │   ├── check_client_isolation.py  # Layer-2 isolation auditor (dynamic subnet sweep)
 │   ├── fingerprint_devices.py     # Asset profiler & randomized MAC detector
