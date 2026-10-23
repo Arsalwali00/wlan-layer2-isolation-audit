@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ARP Spoof Lab Tool - Educational Use Only</title>
+<style>
+  :root {
+    --bg: #1e1e1e;
+    --panel: #2a2a2a;
+    --border: #3a3a3a;
+    --text: #e8e8e8;
+    --muted: #999;
+    --accent: #e05252;
+    --accent2: #4caf7d;
+    --log-bg: #111;
+  }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+  h1 { font-size: 20px; }
+  .warn {
+    color: var(--accent);
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    background: #1a1a1a;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-size: 14px;
+  }
+  .buttons {
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+  }
+  button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 600;
+  }
+  #startBtn { background: var(--accent2); color: #042; }
+  #stopBtn { background: var(--accent); color: #400; }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  #status {
+    margin-top: 14px;
+    font-weight: bold;
+  }
+  #log {
+    background: var(--log-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px;
+    height: 260px;
+    overflow-y: auto;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 12.5px;
+    white-space: pre-wrap;
+  }
+  .hint {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 10px;
+  }
+</style>
+</head>
+<body>
+  <h1>ARP Spoof Lab Tool</h1>
+  <div class="warn">⚠ Use only on your own isolated lab VMs (Host-only / Internal network). Backend must be running: sudo python3 arpspoof_server.py</div>
+
+  <div class="panel">
+    <label>Discover live hosts (ARP scan)</label>
+    <input id="subnet" placeholder="192.168.100.0/24">
+    <div class="buttons">
+      <button id="discoverBtn" onclick="discoverHosts()">Scan Subnet</button>
+    </div>
+    <div class="hint">Uses the interface field below. Scans your isolated lab subnet for live IP/MAC pairs — click a result to fill it into Target or Gateway.</div>
+    <div id="discoverResults" style="margin-top:10px; font-family: monospace; font-size: 13px;"></div>
+  </div>
+
+  <div class="panel">
+    <label>Target IP</label>
+    <input id="targetIp" placeholder="192.168.100.10">
+
+    <label>Gateway IP</label>
+    <input id="gatewayIp" placeholder="192.168.100.1">
+
+    <label>Interval (seconds)</label>
+    <input id="interval" value="2">
+
+    <div class="buttons">
+      <button id="startBtn" onclick="startSpoof()">Start Poisoning</button>
+      <button id="stopBtn" onclick="stopSpoof()" disabled>Stop &amp; Restore</button>
+      <button id="exportBtn" onclick="exportSession()">Export Session</button>
+    </div>
+
+    <div id="status">Status: checking backend...</div>
+    <div class="hint">Remember to enable IP forwarding on the attacker machine yourself if you want victim traffic to pass through: sudo sysctl -w net.ipv4.ip_forward=1</div>
+  </div>
+
+  <div class="panel">
+    <label>Interface (for capture)</label>
+    <input id="iface" placeholder="eth0">
+    <div class="buttons">
+      <button id="sniffStartBtn" onclick="startSniff()" disabled>Start Capture</button>
+      <button id="sniffStopBtn" onclick="stopSniff()" disabled>Stop Capture</button>
+    </div>
+    <div class="hint">Capture starts only while poisoning is active. Records protocol + src/dst metadata only — no packet contents. Use Wireshark/tcpdump alongside this for actual payload inspection.</div>
+    <div id="sniffStatus" style="margin-top:10px; font-weight:bold;"></div>
+    <div id="sniffStats" style="margin-top:8px; font-family: monospace; font-size: 13px;"></div>
+  </div>
+
+  <div class="panel">
+    <div id="log">Waiting for backend at http://127.0.0.1:5050 ...</div>
+  </div>
+
+<script>
+const API = "http://127.0.0.1:5050";
+let polling = null;
+let lastPacketTotal = 0;
+let lastPacketTime = Date.now();
+let currentPps = 0;
+
+async function discoverHosts() {
+  const subnet = document.getElementById('subnet').value.trim();
+  const iface = document.getElementById('iface').value.trim();
+  if (!subnet || !iface) {
+    alert("Fill in subnet (e.g. 192.168.100.0/24) and interface");
+    return;
+  }
+  const resultsDiv = document.getElementById('discoverResults');
+  resultsDiv.textContent = "Scanning...";
+  try {
+    const res = await fetch(`${API}/discover`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({subnet, iface})
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      resultsDiv.textContent = "Error: " + data.error;
+      return;
+    }
+    if (data.hosts.length === 0) {
+      resultsDiv.textContent = "No hosts found.";
+      return;
+    }
+    resultsDiv.innerHTML = data.hosts.map(h =>
+      `<div style="margin-bottom:4px;">
+         ${h.ip}  (${h.mac})
+         <button style="padding:2px 6px; margin-left:6px;" onclick="document.getElementById('targetIp').value='${h.ip}'">Set as Target</button>
+         <button style="padding:2px 6px; margin-left:4px;" onclick="document.getElementById('gatewayIp').value='${h.ip}'">Set as Gateway</button>
+       </div>`
+    ).join("");
+  } catch (e) {
+    resultsDiv.textContent = "Could not reach backend.";
+  }
+}
+
+async function exportSession() {
+  try {
+    const res = await fetch(`${API}/export`);
+    const data = await res.json();
+    if (data.ok) {
+      alert("Session exported to: " + data.filename + "\n(saved in the folder where arpspoof_server.py is running)");
+    } else {
+      alert("Error: " + data.error);
+    }
+  } catch (e) {
+    alert("Could not reach backend.");
+  }
+}
+
+async function startSpoof() {
+  const target_ip = document.getElementById('targetIp').value.trim();
+  const gateway_ip = document.getElementById('gatewayIp').value.trim();
+  const interval = parseFloat(document.getElementById('interval').value) || 2;
+
+  if (!target_ip || !gateway_ip) {
+    alert("Fill in target IP and gateway IP");
+    return;
+  }
+
+  try {
+    const res = await fetch(`${API}/start`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({target_ip, gateway_ip, interval})
+    });
+    const data = await res.json();
+    if (!data.ok) alert("Error: " + data.error);
+  } catch (e) {
+    alert("Could not reach backend. Is arpspoof_server.py running?");
+  }
+}
+
+async function stopSpoof() {
+  try {
+    const res = await fetch(`${API}/stop`, { method: "POST" });
+    const data = await res.json();
+    if (!data.ok) alert("Error: " + data.error);
+  } catch (e) {
+    alert("Could not reach backend.");
+  }
+}
+
+async function startSniff() {
+  const iface = document.getElementById('iface').value.trim();
+  if (!iface) { alert("Enter the interface name"); return; }
+  try {
+    const res = await fetch(`${API}/sniff/start`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({iface})
+    });
+    const data = await res.json();
+    if (!data.ok) alert("Error: " + data.error);
+  } catch (e) {
+    alert("Could not reach backend.");
+  }
+}
+
+async function stopSniff() {
+  try {
+    const res = await fetch(`${API}/sniff/stop`, { method: "POST" });
+    const data = await res.json();
+    if (!data.ok) alert("Error: " + data.error);
+  } catch (e) {
+    alert("Could not reach backend.");
+  }
+}
+
+async function pollStatus() {
+  try {
+    const res = await fetch(`${API}/status`);
+    const data = await res.json();
+
+    document.getElementById('status').textContent =
+      data.running ? `Status: Poisoning... (${data.sent_count} packets sent)` : "Status: Idle";
+
+    document.getElementById('startBtn').disabled = data.running;
+    document.getElementById('stopBtn').disabled = !data.running;
+
+    document.getElementById('sniffStartBtn').disabled = !data.running || data.sniffing;
+    document.getElementById('sniffStopBtn').disabled = !data.sniffing;
+
+    if (data.sniffing) {
+      const now = Date.now();
+      const dt = (now - lastPacketTime) / 1000;
+      if (dt >= 0.9) {  // recompute roughly once per poll interval
+        currentPps = Math.round((data.packet_total - lastPacketTotal) / dt);
+        lastPacketTotal = data.packet_total;
+        lastPacketTime = now;
+      }
+    } else {
+      currentPps = 0;
+      lastPacketTotal = data.packet_total;
+      lastPacketTime = Date.now();
+    }
+
+    document.getElementById('sniffStatus').textContent =
+      data.sniffing ? `Capturing... (${data.packet_total} packets seen, ~${currentPps}/sec)` : "Capture: idle";
+
+    let statsHtml = "";
+    if (data.protocol_counts && Object.keys(data.protocol_counts).length) {
+      statsHtml += "Protocols: " + Object.entries(data.protocol_counts)
+        .map(([k,v]) => `${k}=${v}`).join("  ") + "\n";
+    }
+    if (data.top_talkers && Object.keys(data.top_talkers).length) {
+      statsHtml += "Top flows:\n" + Object.entries(data.top_talkers)
+        .sort((a,b) => b[1]-a[1])
+        .map(([k,v]) => `  ${k}  (${v} pkts)`).join("\n");
+    }
+    document.getElementById('sniffStats').textContent = statsHtml;
+
+    const logDiv = document.getElementById('log');
+    logDiv.textContent = data.log.join("\n");
+    logDiv.scrollTop = logDiv.scrollHeight;
+  } catch (e) {
+    document.getElementById('status').textContent = "Status: backend not reachable";
+  }
+}
+
+pollStatus();
+setInterval(pollStatus, 1000);
+</script>
+</body>
+</html>

@@ -1,0 +1,41 @@
+{
+  "exported_at": "2026-10-23T18:38:06.026244",
+  "target_ip": "192.168.18.51",
+  "gateway_ip": "192.168.18.1",
+  "target_mac": "98:2c:bc:5f:23:c3",
+  "gateway_mac": "a0:70:b7:85:35:f5",
+  "sent_count": 160,
+  "packet_total": 1200,
+  "protocol_counts": {
+    "TCP": 458,
+    "UDP": 737,
+    "OTHER": 5
+  },
+  "top_talkers": {
+    "192.168.18.51 -> 23.155.96.128": 55,
+    "192.168.18.51 -> 35.190.80.1": 31,
+    "192.168.18.51 -> 142.251.47.131": 16,
+    "192.168.18.51 -> 104.26.4.208": 14,
+    "192.168.18.51 -> 172.67.221.124": 13,
+    "192.168.18.51 -> 103.165.192.206": 11,
+    "192.168.18.51 -> 103.165.192.205": 9,
+    "192.168.18.51 -> 74.125.71.84": 8,
+    "142.250.200.170 -> 192.168.18.51": 7,
+    "192.168.18.51 -> 142.250.200.170": 2
+  },
+  "log": [
+    "[*] Scanning 192.168.18.0/24 on en0 for live hosts...",
+    "[+] Scan complete. Found 9 live host(s).",
+    "[*] Resolving MAC addresses...",
+    "[!] Could not resolve MAC for target 192.168.18.2",
+    "[*] Resolving MAC addresses...",
+    "[+] Target:  192.168.18.51 -> 98:2c:bc:5f:23:c3",
+    "[+] Gateway: 192.168.18.1 -> a0:70:b7:85:35:f5",
+    "[*] Poisoning started.",
+    "[*] Starting traffic capture on en0, filtered to host 192.168.18.51",
+    "[i] Capturing protocol/flow metadata only \u2014 no packet contents are parsed or stored.",
+    "[*] Capture stopped. Total packets seen: 1199",
+    "[*] Stopping and restoring ARP tables...",
+    "[+] ARP tables restored."
+  ]
+}

@@ -1,0 +1,23 @@
+# Python byte-code
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments
+.env
+.venv
+env/
+venv/
+arpenv/
+ENV/
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDE config
+.idea/
+.vscode/

@@ -1,0 +1,6 @@
+# Suricata Local NIDS Rules for Layer-2 ARP Anomaly Detection
+# Author: Arslan Wali
+# Reference: An Empirical Study on Layer-2 Station Isolation Deficits (2026)
+
+# Rule SID 1000001: Rate-thresholded inbound ARP reply monitor (5 pkts in 5s = > 1.0 Hz)
+alert arp any any -> any any (msg:"LOCAL POLICY Suspicious Inbound ARP Reply Rate"; threshold: type both, track by_src, count 5, seconds 5; classtype:bad-unknown; sid:1000001; rev:1;)
