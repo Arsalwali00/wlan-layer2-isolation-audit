@@ -42,8 +42,10 @@ def generate_figure_1():
     color_ret = "#1f77b4"
     ax1.set_xlabel("Injection Frequency $f$ (Hz) [Log Scale]", fontweight="bold")
     ax1.set_xscale("log")
+    ax1.minorticks_off()
     ax1.set_xticks(freqs)
-    ax1.get_xaxis().set_major_formatter(plt.ScalarFormatter())
+    ax1.set_xticklabels(["0.2", "0.5", "1.0", "2.0", "5.0"])
+    ax1.set_xlim(0.15, 6.5)
     ax1.set_ylabel("Kernel ARP Cache Retention Rate (%)", color=color_ret, fontweight="bold")
     line1 = ax1.errorbar(
         freqs, retention_means, yerr=retention_stds, fmt="-o", color=color_ret,
