@@ -1,13 +1,14 @@
 # WLAN Layer-2 Station Isolation Deficits & Asymmetric Evasion Thresholds
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23602802.svg)](https://doi.org/10.5281/zenodo.23602802)
+[![ORCID](https://img.shields.io/badge/ORCID-0009--0008--7205--5859-green.svg)](https://orcid.org/0009-0008-7205-5859)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![MITRE ATT&CK](https://img.shields.io/badge/MITRE%20ATT%26CK-T1557.002-red.svg)](https://attack.mitre.org/techniques/T1557/002/)
 [![IEEE Standard](https://img.shields.io/badge/IEEE-802.11w%20%2F%20RFC%20826-orange.svg)](https://standards.ieee.org/)
 [![Status](https://img.shields.io/badge/Status-Research%20%2F%20Portfolio%20Ready-brightgreen.svg)]()
 
-> **Author:** Arslan Wali (BS Computer Science)  
+> **Author:** Arslan Wali ([ORCID: 0009-0008-7205-5859](https://orcid.org/0009-0008-7205-5859))  
 > **Academic Focus:** Applied Cybersecurity, Network Protocol Resilience, & Intrusion Detection Architectures  
 > **Classification:** Empirical Cybersecurity Research / Reproducible Diagnostic Suite  
 
