@@ -89,9 +89,7 @@ wlan-layer2-isolation-audit/
 ├── requirements.txt               # Python package dependencies
 ├── .gitignore                     # Git exclusion rules
 ├── paper/
-│   ├── research_paper.md          # Complete empirical research paper
-│   ├── blog_post_medium_linkedin.md # Executive technical article (Medium/LinkedIn)
-│   └── cv_and_interview_guide.md  # Interview talking points & technical Q&A
+│   └── research_paper.md          # Complete empirical research paper
 ├── src/
 │   ├── check_client_isolation.py  # Layer-2 isolation auditor (dynamic subnet sweep)
 │   ├── fingerprint_devices.py     # Asset profiler & randomized MAC detector
@@ -120,7 +118,7 @@ wlan-layer2-isolation-audit/
 ### 2. Setup Environment
 ```bash
 # Clone the repository
-git clone https://github.com/arslanwali/wlan-layer2-isolation-audit.git
+git clone https://github.com/Arsalwali00/wlan-layer2-isolation-audit.git
 cd wlan-layer2-isolation-audit
 
 # Create and activate virtual environment
@@ -206,7 +204,7 @@ If you reference this research, diagnostic toolchain, or empirical evasion measu
   title        = {An Empirical Study on Layer-2 Station Isolation Deficits and Asymmetric Evasion Thresholds in Wireless Broadcast Domains},
   year         = {2026},
   month        = {October},
-  howpublished = {\url{https://github.com/arslanwali/wlan-layer2-isolation-audit}},
+  howpublished = {\url{https://github.com/Arsalwali00/wlan-layer2-isolation-audit}},
   note         = {Applied Cybersecurity Research Case Study}
 }
 ```

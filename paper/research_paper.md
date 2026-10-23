@@ -256,7 +256,7 @@ Future work will investigate automated mitigation via Software-Defined Networkin
 
 In accordance with academic reproducibility standards (Contribution #3), the complete diagnostic software suite, test orchestration scripts, and raw telemetry data developed for this research are publicly available:
 
-* **Official Repository:** [https://github.com/arslanwali/wlan-layer2-isolation-audit](https://github.com/arslanwali/wlan-layer2-isolation-audit)
+* **Official Repository:** [https://github.com/Arsalwali00/wlan-layer2-isolation-audit](https://github.com/Arsalwali00/wlan-layer2-isolation-audit)
 * **Permanent Research Archive:** Zenodo digital repository deposit (deposit identifier assigned upon final release tag).
 * **Software Toolchain Requirements:** Python 3.9+, Scapy 2.5.0+, Flask 3.0+, Suricata 7.0.2, Zeek 6.0.4.
 
